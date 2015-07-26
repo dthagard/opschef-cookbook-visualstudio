@@ -19,7 +19,7 @@ Windows 2012
 
 Set the `node['visualstudio']['source']` attribute to the download location of the VisualStudio ISO and add 'visualstudio::default' to your runlist. For example: http://example.com/installs
 
-By default this cookbook assumes you're installing VisualStudio 2013 Ultimate with update 4. If you'd like to install another version set the 'edition' attribute to: 'professional', 'premium', or 'testprofessional'.
+By default this cookbook assumes you're installing VisualStudio 2015 Enterprise. If you'd like to install another version set the 'edition' attribute to: 'professional', 'premium', or 'testprofessional'.
 
 # Attributes
 
@@ -27,7 +27,7 @@ By default this cookbook assumes you're installing VisualStudio 2013 Ultimate wi
 * `node['visualstudio']['source']` - Required, fully qualified http(s) path to the ISO directory. For example: http://example.com/installs
 
 ## Optional
-* `node['visualstudio']['version']` - The version of Visual Studio to install. This defaults to 2013.
+* `node['visualstudio']['version']` - The version of Visual Studio to install. This defaults to 2015.
 * `node['visualstudio']['enable_nuget_package_restore']` - true or false. Sets the system wide environment variable to enable MSBuild/VisualStudio package restore on build. This defaults to true.
 * `node['visualstudio']['checksum']` - SHA256 checksum of the ISO.
 * `node['visualstudio']['package_name']` - The name of the package as it shows in Add/Remove programs. Defaults to Microsoft Visual Studio Ultimate 2013.
