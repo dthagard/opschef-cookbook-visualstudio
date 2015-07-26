@@ -21,7 +21,7 @@ GRAPH
     windows (>= 1.2.2)
   sqlce (1.0.0)
     windows (>= 0.0.0)
-  visualstudio (0.0.2)
+  visualstudio (0.0.3)
     seven_zip (>= 0.0.0)
     windows (>= 0.0.0)
   windows (1.37.0)
