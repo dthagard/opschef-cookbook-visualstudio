@@ -33,7 +33,7 @@
     <SelectableItemCustomization Id="ClickOnceV1" Hidden="no" Selected="no" FriendlyName="ClickOnce Publishing Tools" />
     <SelectableItemCustomization Id="LightSwitchV1" Hidden="no" Selected="no" FriendlyName="LightSwitch" />
     <SelectableItemCustomization Id="OfficeDeveloperToolsV1" Hidden="no" Selected="no" FriendlyName="Microsoft Office Developer Tools" />
-    <SelectableItemCustomization Id="SQLV1" Hidden="no" Selected="no" FriendlyName="Microsoft SQL Server Data Tools" />
+    <SelectableItemCustomization Id="SQLV1" Hidden="no" Selected="yes" FriendlyName="Microsoft SQL Server Data Tools" />
     <SelectableItemCustomization Id="WebToolsV1" Hidden="no" Selected="yes" FriendlyName="Microsoft Web Developer Tools" />
     <SelectableItemCustomization Id="PowerShellToolsV1" Hidden="no" Selected="yes" FriendlyName="PowerShell Tools for Visual Studio" />
     <SelectableItemCustomization Id="SilverLight_Developer_KitV1" Hidden="no" Selected="no" FriendlyName="Silverlight Development Kit" />
