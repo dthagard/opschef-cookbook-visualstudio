@@ -34,8 +34,8 @@
     <SelectableItemCustomization Id="LightSwitchV1" Hidden="no" Selected="no" FriendlyName="LightSwitch" />
     <SelectableItemCustomization Id="OfficeDeveloperToolsV1" Hidden="no" Selected="no" FriendlyName="Microsoft Office Developer Tools" />
     <SelectableItemCustomization Id="SQLV1" Hidden="no" Selected="no" FriendlyName="Microsoft SQL Server Data Tools" />
-    <SelectableItemCustomization Id="WebToolsV1" Hidden="no" Selected="no" FriendlyName="Microsoft Web Developer Tools" />
-    <SelectableItemCustomization Id="PowerShellToolsV1" Hidden="no" Selected="no" FriendlyName="PowerShell Tools for Visual Studio" />
+    <SelectableItemCustomization Id="WebToolsV1" Hidden="no" Selected="yes" FriendlyName="Microsoft Web Developer Tools" />
+    <SelectableItemCustomization Id="PowerShellToolsV1" Hidden="no" Selected="yes" FriendlyName="PowerShell Tools for Visual Studio" />
     <SelectableItemCustomization Id="SilverLight_Developer_KitV1" Hidden="no" Selected="no" FriendlyName="Silverlight Development Kit" />
     <SelectableItemCustomization Id="XamarinVSCoreV1" Hidden="no" Selected="no" FriendlyName="C#/.NET (Xamarin)" />
     <SelectableItemCustomization Id="MDDJSCoreV1" Hidden="no" Selected="no" FriendlyName="HTML/JavaScript (Apache Cordova)" />
@@ -51,7 +51,7 @@
     <SelectableItemCustomization Id="WebSocket4NetV1" Hidden="no" Selected="no" FriendlyName="WebSocket4Net" />
     <SelectableItemCustomization Id="ToolsForWin81_WP80_WP81V1" Hidden="no" Selected="no" FriendlyName="Tools and Windows SDKs" />
     <SelectableItemCustomization Id="WindowsPhone81EmulatorsV1" Hidden="no" Selected="no" FriendlyName="Emulators for Windows Phone 8.1" />
-    <SelectableItemCustomization Id="GitHubVSV1" Hidden="no" Selected="no" FriendlyName="GitHub Extension for Visual Studio" />
+    <SelectableItemCustomization Id="GitHubVSV1" Hidden="no" Selected="yes" FriendlyName="GitHub Extension for Visual Studio" />
     <SelectableItemCustomization Id="VS_SDK_GroupV1" Hidden="no" Selected="no" FriendlyName="Visual Studio Extensibility Tools" />
     <SelectableItemCustomization Id="VS_SDK_Breadcrumb_GroupV1" Selected="no" FriendlyName="Visual Studio Extensibility Tools" />
     <SelectableItemCustomization Id="LocalDBHidden" Selected="no" FriendlyName="LocalDBHidden" />
