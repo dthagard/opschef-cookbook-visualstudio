@@ -33,26 +33,14 @@ edition = node['visualstudio']['edition']
 iso_url = File.join(node['visualstudio']['source'], node['visualstudio'][edition]['filename'])
 iso_path = win_friendly_path(File.join(Chef::Config[:file_cache_path], node['visualstudio'][edition]['filename']))
 
-install_path = "C:\\VisualStudioInstall"
 install_log_file = win_friendly_path(File.join(node['visualstudio']['install_dir'], 'vsinstall.log'))
 
-setup_exe_path = win_friendly_path(File.join(install_path, node['visualstudio'][edition]['installer_file']))
 admin_deployment_xml_file = win_friendly_path(File.join(Chef::Config[:file_cache_path], 'AdminDeployment.xml'))
 
 remote_file iso_path do
   source iso_url
-  not_if { vs_is_installed }
-end
-
-powershell_script 'Mount ISO' do
-  guard_interpreter :powershell_script
-	code  <<-EOH
-		$Image = Mount-DiskImage -ImagePath "#{iso_path}" -NoDriveLetter -PassThru
-    $Vol = Get-Volume -DiskImage $Image
-    $Drive = Get-WmiObject win32_volume -Filter "Label = '$($Vol.FileSystemLabel)'" -ErrorAction Stop
-    $Drive.AddMountPoint("C:\\VisualStudioInstall")
-	EOH
-  not_if { vs_is_installed }
+  checksum node['visualstudio'][edition]['checksum']
+  not_if { File.exists?(iso_path)}
 end
 
 # Create installation config file
@@ -63,11 +51,19 @@ cookbook_file admin_deployment_xml_file do
 end
 
 # Install Visual Studio
-windows_package node['visualstudio'][edition]['package_name'] do
-  source setup_exe_path
-  installer_type :custom
-  options "/Q /norestart /Log \"#{install_log_file}\" /AdminFile \"#{admin_deployment_xml_file}\""
-  timeout 3600 # 1hour
-  success_codes [0, 42, 127, 3010] # 3010 - reboot required
+powershell_script "Install #{node['visualstudio'][edition]['package_name']}" do
+  code <<-EOH
+    $ImagePath = "#{iso_path}"
+
+    Mount-DiskImage -ImagePath $ImagePath
+    $DriveLetter = (Get-DiskImage -ImagePath $ImagePath | Get-Volume).DriveLetter
+
+    $Command = "${DriveLetter}:\\#{node['visualstudio'][edition]['installer_file']}"
+    $ArgList = "/Q /norestart /Log \\"#{install_log_file}\\" /AdminFile \\"#{admin_deployment_xml_file}\\""
+
+    Start-Process -FilePath $Command -ArgumentList $ArgList -Wait
+
+    Dismount-DiskImage -ImagePath $ImagePath
+  EOH
   not_if { vs_is_installed }
 end
