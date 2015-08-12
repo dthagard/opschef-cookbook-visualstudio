@@ -15,7 +15,7 @@ describe 'visualstudio::install' do
 
     it 'install dir attribute is correctly set' do
       vs_install_dir = chef_run.node['visualstudio']['install_dir']
-      expect(vs_install_dir).to eq('C:\Program Files (x86)\Microsoft Visual Studio 11.0')
+      expect(vs_install_dir).to eq('C:\Program Files (x86)\Microsoft Visual Studio 14.0')
     end
   end
 

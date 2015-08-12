@@ -29,20 +29,29 @@ end
 
 version = 'vs' + node['visualstudio']['version']
 edition = node['visualstudio']['edition']
-install_url = File.join(node['visualstudio']['source'], node['visualstudio'][edition]['filename'])
-install_log_file = win_friendly_path(
-  File.join(node['visualstudio']['install_dir'], 'vsinstall.log'))
 
-iso_extraction_dir = win_friendly_path(File.join(Chef::Config[:file_cache_path], version))
-setup_exe_path = File.join(iso_extraction_dir, node['visualstudio'][edition]['installer_file'])
-admin_deployment_xml_file = win_friendly_path(File.join(iso_extraction_dir, 'AdminDeployment.xml'))
+iso_url = File.join(node['visualstudio']['source'], node['visualstudio'][edition]['filename'])
+iso_path = win_friendly_path(File.join(Chef::Config[:file_cache_path], node['visualstudio'][edition]['filename']))
 
-# Extract the ISO image to the tmp dir
-seven_zip_archive 'extract_vs_iso' do
-  path iso_extraction_dir
-  source install_url
-  overwrite true
-  checksum node['visualstudio'][edition]['checksum']
+install_path = "C:\\VisualStudioInstall"
+install_log_file = win_friendly_path(File.join(node['visualstudio']['install_dir'], 'vsinstall.log'))
+
+setup_exe_path = win_friendly_path(File.join(install_path, node['visualstudio'][edition]['installer_file']))
+admin_deployment_xml_file = win_friendly_path(File.join(Chef::Config[:file_cache_path], 'AdminDeployment.xml'))
+
+remote_file iso_path do
+  source iso_url
+  not_if { vs_is_installed }
+end
+
+powershell_script 'Mount ISO' do
+  guard_interpreter :powershell_script
+	code  <<-EOH
+		$Image = Mount-DiskImage -ImagePath "#{iso_path}" -NoDriveLetter -PassThru
+    $Vol = Get-Volume -DiskImage $Image
+    $Drive = Get-WmiObject win32_volume -Filter "Label = '$($Vol.FileSystemLabel)'" -ErrorAction Stop
+    $Drive.AddMountPoint("C:\\VisualStudioInstall")
+	EOH
   not_if { vs_is_installed }
 end
 
@@ -58,15 +67,7 @@ windows_package node['visualstudio'][edition]['package_name'] do
   source setup_exe_path
   installer_type :custom
   options "/Q /norestart /Log \"#{install_log_file}\" /AdminFile \"#{admin_deployment_xml_file}\""
-  notifies :delete, "directory[#{iso_extraction_dir}]"
   timeout 3600 # 1hour
   success_codes [0, 42, 127, 3010] # 3010 - reboot required
   not_if { vs_is_installed }
-end
-
-# Cleanup extracted ISO files from tmp dir
-directory iso_extraction_dir do
-  action :nothing
-  recursive true
-  not_if { node['visualstudio']['preserve_extracted_files'] }
 end

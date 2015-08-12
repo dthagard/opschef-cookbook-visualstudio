@@ -1,0 +1,17 @@
+DEPENDENCIES
+  minitest-handler (~> 1.3.1)
+  sqlce (~> 1.0.0)
+  visualstudio
+    path: .
+    metadata: true
+
+GRAPH
+  chef_handler (1.2.0)
+  minitest-handler (1.3.2)
+    chef_handler (>= 0.0.0)
+  sqlce (1.0.0)
+    windows (>= 0.0.0)
+  visualstudio (0.0.5)
+    windows (>= 0.0.0)
+  windows (1.38.1)
+    chef_handler (>= 0.0.0)
