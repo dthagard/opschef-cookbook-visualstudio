@@ -33,7 +33,7 @@ edition = node['visualstudio']['edition']
 iso_url = File.join(node['visualstudio']['source'], node['visualstudio'][edition]['filename'])
 iso_path = win_friendly_path(File.join(Chef::Config[:file_cache_path], node['visualstudio'][edition]['filename']))
 
-install_log_file = win_friendly_path(File.join(node['visualstudio']['install_dir'], 'vsinstall.log'))
+install_log_file = win_friendly_path(File.join(Chef::Config[:file_cache_path], 'vsinstall.log'))
 
 admin_deployment_xml_file = win_friendly_path(File.join(Chef::Config[:file_cache_path], 'AdminDeployment.xml'))
 
