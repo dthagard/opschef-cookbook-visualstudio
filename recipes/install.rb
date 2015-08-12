@@ -29,21 +29,18 @@ end
 
 version = 'vs' + node['visualstudio']['version']
 edition = node['visualstudio']['edition']
-install_url = File.join(node['visualstudio']['source'], node['visualstudio'][edition]['filename'])
-install_log_file = win_friendly_path(
-  File.join(node['visualstudio']['install_dir'], 'vsinstall.log'))
 
-iso_extraction_dir = win_friendly_path(File.join(Chef::Config[:file_cache_path], version))
-setup_exe_path = File.join(iso_extraction_dir, node['visualstudio'][edition]['installer_file'])
-admin_deployment_xml_file = win_friendly_path(File.join(iso_extraction_dir, 'AdminDeployment.xml'))
+iso_url = File.join(node['visualstudio']['source'], node['visualstudio'][edition]['filename'])
+iso_path = win_friendly_path(File.join(Chef::Config[:file_cache_path], node['visualstudio'][edition]['filename']))
 
-# Extract the ISO image to the tmp dir
-seven_zip_archive 'extract_vs_iso' do
-  path iso_extraction_dir
-  source install_url
-  overwrite true
+install_log_file = win_friendly_path(File.join(Chef::Config[:file_cache_path], 'vsinstall.log'))
+
+admin_deployment_xml_file = win_friendly_path(File.join(Chef::Config[:file_cache_path], 'AdminDeployment.xml'))
+
+remote_file iso_path do
+  source iso_url
   checksum node['visualstudio'][edition]['checksum']
-  not_if { vs_is_installed }
+  not_if { File.exists?(iso_path)}
 end
 
 # Create installation config file
@@ -53,19 +50,29 @@ cookbook_file admin_deployment_xml_file do
   not_if { vs_is_installed }
 end
 
-# Install Visual Studio
-windows_package node['visualstudio'][edition]['package_name'] do
-  source setup_exe_path
-  installer_type :custom
-  options "/Q /norestart /Log \"#{install_log_file}\" /AdminFile \"#{admin_deployment_xml_file}\""
-  notifies :delete, "directory[#{iso_extraction_dir}]"
-  timeout 3600 # 1hour
-  not_if { vs_is_installed }
-end
+#reboot 'Restart Computer' do
+#  action :nothing
+#end
 
-# Cleanup extracted ISO files from tmp dir
-directory iso_extraction_dir do
-  action :nothing
-  recursive true
-  not_if { node['visualstudio']['preserve_extracted_files'] }
+# Install Visual Studio
+powershell_script "Install #{node['visualstudio'][edition]['package_name']}" do
+  code <<-EOH
+    $ImagePath = "#{iso_path}"
+
+    Mount-DiskImage -ImagePath $ImagePath
+    $DriveLetter = (Get-DiskImage -ImagePath $ImagePath | Get-Volume).DriveLetter
+
+    $Command = "${DriveLetter}:\\#{node['visualstudio'][edition]['installer_file']}"
+    $ArgList = "/Q /norestart /Log `"#{install_log_file}`" /AdminFile `"#{admin_deployment_xml_file}`""
+
+    Start-Process -FilePath $Command -ArgumentList $ArgList -Wait
+
+    Dismount-DiskImage -ImagePath $ImagePath
+
+	Exit 0
+  EOH
+  returns [0, 1]
+  guard_interpreter :powershell_script
+  not_if { vs_is_installed }
+  # notifies :reboot_now, 'reboot[Restart Computer]', :immediately
 end

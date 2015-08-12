@@ -21,14 +21,15 @@
 # Load the supported Visual Studio versions
 include_attribute "visualstudio::vs2012"
 include_attribute "visualstudio::vs2013"
+include_attribute "visualstudio::vs2015"
 
 default['visualstudio']['enable_nuget_package_restore'] = true
 
 # Set this attribute to the version of visual studio you wish to install
-default['visualstudio']['version'] = '2013'
+default['visualstudio']['version'] = '2015'
 
 # Set this attribute to the edition of visual studio you wish to install
-default['visualstudio']['edition'] = 'ultimate' # or premium, professional, testprofessional
+default['visualstudio']['edition'] = 'enterprise' # or premium, professional, testprofessional, enterprise
 
 # Set this attribute your self to the FQDN of the folder which contains the ISO
 # default['visualstudio']['source'] = 'http://example.com:8080/visualstudio'

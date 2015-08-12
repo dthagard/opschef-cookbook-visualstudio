@@ -18,14 +18,9 @@
 # limitations under the License.
 #
 
-# VS installation requires .NET 4.5 to be installed first
-include_recipe 'visualstudio::dotnet_prereq'
-
-# We require 7-zip in order to extract the ISOs
-include_recipe 'seven_zip'
-
 # Enable/disable Nuget package restore
 include_recipe 'visualstudio::nuget'
 
 # Install VS
 include_recipe 'visualstudio::install'
+

@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of visualstudio.
 
+## 0.0.30:
+
+* Update Berksfile to use source to supermarket.chef.io
+* Add setup for Visual Studio 2015
+
 ## 0.0.20:
 
 * Updated cookbook to handle multiple versions of Visual Studio.
