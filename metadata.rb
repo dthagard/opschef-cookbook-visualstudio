@@ -6,4 +6,3 @@ description      'Installs/Configures Visual Studio'
 version          '0.0.5'
 
 depends          'windows'
-depends          'seven_zip'
