@@ -50,6 +50,10 @@ cookbook_file admin_deployment_xml_file do
   not_if { vs_is_installed }
 end
 
+reboot 'Restart Computer' do
+  action :nothing
+end
+
 # Install Visual Studio
 powershell_script "Install #{node['visualstudio'][edition]['package_name']}" do
   code <<-EOH
@@ -59,11 +63,16 @@ powershell_script "Install #{node['visualstudio'][edition]['package_name']}" do
     $DriveLetter = (Get-DiskImage -ImagePath $ImagePath | Get-Volume).DriveLetter
 
     $Command = "${DriveLetter}:\\#{node['visualstudio'][edition]['installer_file']}"
-    $ArgList = "/Q /norestart /Log \\"#{install_log_file}\\" /AdminFile \\"#{admin_deployment_xml_file}\\""
+    $ArgList = "/Q /norestart /Log `"#{install_log_file}`" /AdminFile `"#{admin_deployment_xml_file}`""
 
     Start-Process -FilePath $Command -ArgumentList $ArgList -Wait
 
     Dismount-DiskImage -ImagePath $ImagePath
+
+	Exit 0
   EOH
+  returns [0, 1]
+  guard_interpreter :powershell_script
   not_if { vs_is_installed }
+  notifies :reboot_now, 'reboot[Restart Computer]', :immediately
 end
