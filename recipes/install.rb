@@ -50,9 +50,9 @@ cookbook_file admin_deployment_xml_file do
   not_if { vs_is_installed }
 end
 
-reboot 'Restart Computer' do
-  action :nothing
-end
+#reboot 'Restart Computer' do
+#  action :nothing
+#end
 
 # Install Visual Studio
 powershell_script "Install #{node['visualstudio'][edition]['package_name']}" do
@@ -74,5 +74,5 @@ powershell_script "Install #{node['visualstudio'][edition]['package_name']}" do
   returns [0, 1]
   guard_interpreter :powershell_script
   not_if { vs_is_installed }
-  notifies :reboot_now, 'reboot[Restart Computer]', :immediately
+  # notifies :reboot_now, 'reboot[Restart Computer]', :immediately
 end
